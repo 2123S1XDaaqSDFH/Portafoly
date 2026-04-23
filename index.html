@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JOEX® | Agencia Digital</title>
+    <title>JOEX® | Agencia Digital Élite</title>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Montserrat:wght@100;300;600;900&display=swap" rel="stylesheet">
     
     <style>
@@ -13,6 +13,7 @@
             --red-action: #d40000;
             --black: #000000;
             --white: #ffffff;
+            --wa-green: #25d366;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -22,9 +23,10 @@
             font-family: 'Montserrat', sans-serif; 
             color: var(--white); 
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* LUCES DINÁMICAS SIEMPRE EN MOVIMIENTO */
+        /* --- CAPA DE LUCES AMBIENTALES DINÁMICAS --- */
         .bg-lights {
             position: fixed;
             top: 0; left: 0;
@@ -35,28 +37,27 @@
 
         .light {
             position: absolute;
-            width: 80vw;
-            height: 80vw;
+            width: 70vw;
+            height: 70vw;
             border-radius: 50%;
-            filter: blur(160px);
-            opacity: 0.08;
-            animation: moveLights 20s infinite alternate ease-in-out;
+            filter: blur(150px);
+            opacity: 0.07;
+            animation: moveLights 25s infinite alternate ease-in-out;
         }
 
-        .light-gold { background: var(--gold); top: -20%; left: -20%; }
-        .light-red { background: var(--red-action); bottom: -20%; right: -20%; animation-delay: -10s; }
+        .light-gold { background: var(--gold); top: -15%; left: -15%; }
+        .light-red { background: var(--red-action); bottom: -15%; right: -15%; animation-delay: -12s; }
 
         @keyframes moveLights {
             0% { transform: translate(0,0) scale(1); }
-            50% { transform: translate(15vw, 10vh) scale(1.1); }
-            100% { transform: translate(-10vw, 20vh) scale(1); }
+            100% { transform: translate(15vw, 15vh) scale(1.1); }
         }
 
-        /* LOADER CON LLUVIA DE DINERO */
+        /* --- LOADER BLACK & GOLD CON DIAMANTES Y DINERO --- */
         #loader-portal {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100vh;
-            background: var(--white);
+            background: var(--black); /* Fondo Negro pedido */
             z-index: 10000;
             display: flex;
             justify-content: center;
@@ -67,7 +68,7 @@
         .money {
             position: absolute;
             top: -50px;
-            font-size: 2rem;
+            font-size: 1.5rem;
             z-index: 10001;
             pointer-events: none;
         }
@@ -82,36 +83,62 @@
 
         .intro-word {
             font-family: 'Cinzel', serif;
-            color: var(--black);
+            background: var(--gold-grad); /* Letras de Oro pedido */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             font-weight: 900;
             letter-spacing: 15px;
             opacity: 0;
         }
 
         .word-bienvenido { font-size: 3vw; margin-bottom: 10px; }
-        .word-a { font-size: 2vw; margin-bottom: 10px; }
-        .word-joex { font-size: 6vw; letter-spacing: 25px; }
+        .word-a { font-size: 2.5vw; margin-bottom: 10px; }
+        .word-joex { font-size: 7vw; letter-spacing: 25px; }
+        .diamonds { font-size: 2rem; margin-top: 20px; opacity: 0; }
 
-        /* BOTÓN FLOTANTE WHATSAPP */
-        .whatsapp-float {
+        /* --- BOTÓN FLOTANTE WHATSAPP CON PULSO DE LUZ (NUEVO) --- */
+        .whatsapp-float-wrapper {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: #25d366;
-            width: 60px;
-            height: 60px;
+            z-index: 1000;
+            width: 65px;
+            height: 65px;
+        }
+
+        /* La luz que pulsa detrás */
+        .whatsapp-pulse {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--wa-green);
+            border-radius: 50%;
+            opacity: 0;
+            z-index: -1;
+            animation: pulseWA 2s infinite;
+        }
+
+        .whatsapp-float {
+            background: var(--wa-green);
+            width: 100%; height: 100%;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
-            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             transition: 0.3s;
+            text-decoration: none;
         }
         .whatsapp-float:hover { transform: scale(1.1); }
         .whatsapp-float img { width: 35px; }
 
-        /* CONTENIDO PRINCIPAL */
+        @keyframes pulseWA {
+            0% { transform: scale(1); opacity: 0.6; box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { transform: scale(1.6); opacity: 0; box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        /* --- CONTENIDO PRINCIPAL --- */
         #app-canvas { position: relative; z-index: 10; opacity: 0; }
         
         .nav {
@@ -121,30 +148,69 @@
         }
 
         .gold-logo {
-            font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 900;
+            font-family: 'Cinzel', serif; font-size: 2.2rem; font-weight: 900;
             background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            letter-spacing: 5px;
         }
 
+        .nav-links { display: flex; align-items: center; }
+        .nav-links a { text-decoration: none; margin-left: 30px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; }
+        
+        .nav-cta {
+            color: var(--gold); border: 1px solid var(--gold);
+            padding: 10px 25px; font-weight: 600; transition: 0.4s;
+        }
+        .nav-cta:hover { background: var(--gold); color: #000; }
+
+        /* HERO */
         .hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; }
-        .hero-title { font-family: 'Cinzel', serif; font-size: 5vw; }
+        .hero-tag { font-size: 1rem; color: var(--gold); letter-spacing: 10px; margin-bottom: 20px; font-weight: 300; }
+        .hero-title { font-family: 'Cinzel', serif; font-size: 5.5vw; line-height: 1.1; }
         .gold-text { background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .portfolio-header { text-align: center; padding: 60px 0; }
-        .portfolio-header h2 { font-family: 'Cinzel', serif; font-size: 3rem; color: var(--gold); }
-        .portfolio-header p { font-size: 1rem; letter-spacing: 4px; color: #555; text-transform: uppercase; }
+        /* PORTAFOLIO */
+        .portfolio-header { text-align: center; padding: 120px 0 40px; }
+        .portfolio-header h2 { font-family: 'Cinzel', serif; font-size: 3.5rem; color: var(--gold); }
+        .portfolio-header p { letter-spacing: 5px; color: #444; font-weight: 600; text-transform: uppercase; }
 
-        .project-row { padding: 100px 10%; border-bottom: 1px solid #111; text-align: center; }
+        .project-row { padding: 80px 10%; border-bottom: 1px solid #111; text-align: center; }
+        .p-num { color: var(--gold); display: block; margin-bottom: 10px; font-weight: 900; letter-spacing: 3px; }
         .project-info h3 { font-family: 'Cinzel', serif; font-size: 2.5rem; margin-bottom: 15px; }
-        .btn-project { color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--gold); padding-bottom: 5px; }
+        .project-info p { color: #888; max-width: 600px; margin: 0 auto 30px; font-weight: 300; line-height: 1.6; }
+        .btn-project { color: var(--white); text-decoration: none; border-bottom: 1px solid var(--gold); padding-bottom: 5px; transition: 0.3s; font-weight: 600; }
+        .btn-project:hover { letter-spacing: 2px; color: var(--gold); }
 
-        .mega-cta { padding: 100px 0; text-align: center; }
+        /* MEGA CTA ROJO */
+        .mega-cta { padding: 120px 0; text-align: center; }
         .btn-red-action {
             background: var(--red-action); color: #fff; padding: 25px 60px;
-            font-size: 1.8rem; font-weight: 900; text-decoration: none; border-radius: 5px;
-            box-shadow: 0 0 30px rgba(212,0,0,0.3); display: inline-block;
+            font-size: 2rem; font-weight: 900; text-decoration: none; border-radius: 5px;
+            box-shadow: 0 0 40px rgba(212,0,0,0.3); display: inline-block; transition: 0.4s;
         }
+        .btn-red-action:hover { transform: scale(1.1); box-shadow: 0 0 60px rgba(212,0,0,0.6); }
 
-        .legal-footer { padding: 40px; text-align: center; font-size: 0.7rem; color: #444; border-top: 1px solid #111; }
+        /* REVIEWS (SECCIÓN FIJADA) */
+        .reviews { padding: 100px 10%; background: #050505; text-align: center; position: relative; z-index: 10; }
+        .rev-title { font-family: 'Cinzel', serif; font-size: 2.8rem; color: var(--gold); margin-bottom: 60px; }
+        .reviews-slider { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; max-width: 1200px; margin: 0 auto; }
+        .review-card {
+            background: #111; padding: 35px; border-radius: 5px; border-left: 4px solid var(--gold);
+            flex: 1 1 300px; max-width: 350px; text-align: left; transition: 0.3s;
+        }
+        .review-card:hover { transform: translateY(-5px); background: #1a1a1a; }
+        .review-card strong { color: var(--gold); display: block; margin-bottom: 10px; font-size: 1.1rem; }
+        .review-card p { color: #aaa; font-style: italic; font-weight: 300; }
+
+        /* FOOTER */
+        .legal-footer { padding: 60px; text-align: center; font-size: 0.8rem; color: #333; border-top: 1px solid #111; position: relative; z-index: 10; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 10vw; }
+            .nav-links { display: none; }
+            .intro-word { letter-spacing: 8px; }
+            .project-info h3 { font-size: 2rem; }
+        }
     </style>
 </head>
 <body>
@@ -154,30 +220,37 @@
         <div class="light light-red"></div>
     </div>
 
-    <a href="https://wa.me/573184499437" class="whatsapp-float" target="_blank">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-    </a>
+    <div class="whatsapp-float-wrapper">
+        <div class="whatsapp-pulse"></div> <a href="https://wa.me/573184499437" class="whatsapp-float" target="_blank" title="Contactar a JOEX®">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+        </a>
+    </div>
 
     <div id="loader-portal">
         <div class="intro-content">
             <h1 class="intro-word word-bienvenido">BIENVENIDO</h1>
             <h1 class="intro-word word-a">A</h1>
             <h1 class="intro-word word-joex">JOEX</h1>
+            <div class="diamonds">💎 💎 💎</div>
         </div>
     </div>
 
     <div id="app-canvas">
         <nav class="nav">
             <div class="gold-logo">JOEX<span>®</span></div>
+            <div class="nav-links">
+                <a href="https://wa.me/573184499437" class="nav-cta" target="_blank">Consultoría Premium</a>
+            </div>
         </nav>
 
         <section class="hero">
             <div class="hero-inner">
+                <h2 class="hero-tag">ESTÁNDAR INTERNACIONAL</h2>
                 <h1 class="hero-title">No creamos webs,<br><span class="gold-text">creamos LEGADOS</span></h1>
             </div>
         </section>
 
-        <section id="proyectos">
+        <section id="proyectos" class="portfolio">
             <div class="portfolio-header">
                 <h2>PORTAFOLIO</h2>
                 <p>Nuestras páginas creadas</p>
@@ -185,67 +258,147 @@
 
             <div class="project-row">
                 <div class="project-info">
+                    <span class="p-num">01</span>
                     <h3>PC GAMER BUENOS AIRES</h3>
-                    <p>High-End Hardware Ecosystem.</p>
+                    <p>Ecosistema High-End para hardware competitivo. UX/UI de máxima velocidad y alto octanaje.</p>
                     <a href="https://2123s1xdaaqsdfh.github.io/PC-GAMER/" target="_blank" class="btn-project">Explorar Sistema</a>
                 </div>
             </div>
 
             <div class="project-row">
                 <div class="project-info">
+                    <span class="p-num">02</span>
                     <h3>PROSPEKTA</h3>
-                    <p>BPO & Lead Generation Engine.</p>
+                    <p>Motor de generación de leads y arquitectura BPO avanzada para captación masiva.</p>
                     <a href="https://2123s1xdaaqsdfh.github.io/Prospekta/" target="_blank" class="btn-project">Explorar Sistema</a>
                 </div>
             </div>
 
+            <div class="project-row">
+                <div class="project-info">
+                    <span class="p-num">03</span>
+                    <h3>TECNIBABY</h3>
+                    <p>Plataforma de servicios especializados en bebés con interfaz de confianza premium.</p>
+                    <a href="https://2123s1xdaaqsdfh.github.io/limpiezadecochesdebebe.com/" target="_blank" class="btn-project">Explorar Sistema</a>
+                </div>
+            </div>
+
+            <div class="project-row">
+                <div class="project-info">
+                    <span class="p-num">04</span>
+                    <h3>IMPRONTO COLOMBIA</h3>
+                    <p>Vitrina corporativa para la industria publicitaria de gran formato y soluciones industriales.</p>
+                    <a href="https://2123s1xdaaqsdfh.github.io/impronto/" target="_blank" class="btn-project">Explorar Sistema</a>
+                </div>
+            </div>
+            
             <div class="mega-cta">
                 <a href="https://wa.me/573184499437" class="btn-red-action">¡QUIERO LA MÍA!</a>
             </div>
         </section>
 
+        <section class="reviews">
+            <h2 class="rev-title">Confían en nuestra firma</h2>
+            <div class="reviews-slider">
+                <div class="review-card">
+                    <strong>Prospekta BPO:</strong>
+                    <p>"Resultados inmediatos. JOEX elevó nuestra presencia digital a un nivel corporativo superior."</p>
+                </div>
+                <div class="review-card">
+                    <strong>PC Gamer BA:</strong>
+                    <p>"La mejor interfaz del sector. La velocidad y el diseño son impecables."</p>
+                </div>
+                <div class="review-card">
+                    <strong>Tecnibaby:</strong>
+                    <p>"Profesionalismo total. Entendieron perfectamente la confianza que debíamos transmitir."</p>
+                </div>
+                <div class="review-card">
+                    <strong>Impronto SAS:</strong>
+                    <p>"Elegancia y robustez. Nuestra vitrina industrial ahora refleja nuestra capacidad real."</p>
+                </div>
+                <div class="review-card">
+                    <strong>AutoElite:</strong>
+                    <p>"Diseño que vende solo. El flujo de usuario es intuitivo y de alta conversión."</p>
+                </div>
+                <div class="review-card">
+                    <strong>Global Tech:</strong>
+                    <p>"Soporte bilingüe de élite. Una agencia que entiende el mercado internacional."</p>
+                </div>
+            </div>
+        </section>
+
         <footer class="legal-footer">
-            <p>MARCA REGISTRADA JOEX ® 2026.</p>
+            <p>MARCA REGISTRADA JOEX ® 2026. TODOS LOS DERECHOS RESERVADOS. MEDELLÍN, ANTIOQUIA.</p>
         </footer>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
     <script>
-        // FUNCIÓN LLUVIA DE DINERO
-        function createMoney() {
-            const symbols = ['$', '💵', '💰', '💸'];
-            for(let i = 0; i < 50; i++) {
-                const money = document.createElement('div');
-                money.className = 'money';
-                money.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-                money.style.left = Math.random() * 100 + 'vw';
-                money.style.animationDuration = (Math.random() * 2 + 1) + 's';
-                money.style.opacity = Math.random();
-                document.getElementById('loader-portal').appendChild(money);
-                
-                gsap.to(money, {
+        // Función para la lluvia de dinero en el loader
+        function createLoaderEffects() {
+            const symbols = ['💵', '💰', '💸', '💎'];
+            const loader = document.getElementById('loader-portal');
+            for(let i = 0; i < 45; i++) {
+                const m = document.createElement('div');
+                m.className = 'money';
+                m.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+                m.style.left = Math.random() * 100 + 'vw';
+                loader.appendChild(m);
+                gsap.to(m, {
                     y: '110vh',
-                    x: (Math.random() - 0.5) * 200,
+                    x: (Math.random() - 0.5) * 150,
                     rotation: Math.random() * 360,
-                    duration: Math.random() * 2 + 1,
+                    duration: Math.random() * 2 + 1.5,
                     delay: Math.random() * 2,
-                    ease: "none",
-                    repeat: -1
+                    repeat: -1,
+                    ease: "none"
                 });
             }
         }
 
+        // Animación de entrada principal
         window.addEventListener('load', () => {
-            createMoney();
+            createLoaderEffects();
+            gsap.registerPlugin(ScrollTrigger);
             const tl = gsap.timeline();
 
-            // SINCRONIZACIÓN DE LETRAS
+            // Secuencia del Loader
             tl.to(".word-bienvenido", { opacity: 1, y: -10, duration: 0.8 })
               .to(".word-a", { opacity: 1, y: -10, duration: 0.6 }, "-=0.2")
               .to(".word-joex", { opacity: 1, y: -10, duration: 1, ease: "back.out(1.7)" }, "-=0.2")
-              .to("#loader-portal", { y: "-100%", duration: 1.2, ease: "expo.inOut", delay: 1 })
+              .to(".diamonds", { opacity: 1, scale: 1.2, duration: 0.5 })
+              .to("#loader-portal", { y: "-100%", duration: 1.2, ease: "expo.inOut", delay: 1.2 })
               .to("#app-canvas", { opacity: 1, duration: 0.5 }, "-=0.5");
+
+            // Animación de Scroll para los Proyectos
+            gsap.utils.toArray(".project-row").forEach(row => {
+                gsap.from(row, {
+                    scrollTrigger: {
+                        trigger: row,
+                        start: "top 85%",
+                        toggleActions: "play reverse play reverse"
+                    },
+                    opacity: 0,
+                    y: 60,
+                    duration: 1.2,
+                    ease: "power3.out"
+                });
+            });
+
+            // Animación de Scroll para las Reviews
+            gsap.from(".review-card", {
+                scrollTrigger: {
+                    trigger: ".reviews",
+                    start: "top 80%"
+                },
+                scale: 0.8,
+                opacity: 0,
+                stagger: 0.2,
+                duration: 0.8,
+                ease: "back.out(1.2)"
+            });
         });
     </script>
 </body>
