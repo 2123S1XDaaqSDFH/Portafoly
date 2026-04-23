@@ -8,7 +8,53 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body { background: var(--black); font-family: 'Montserrat', sans-serif; color: var(--white); overflow-x: hidden; }
+body { 
+    background: var(--black); 
+    font-family: 'Montserrat', sans-serif; 
+    color: var(--white); 
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* --- EL ARREGLO DE LAS LUCES (CAPA INDEPENDIENTE) --- */
+.bg-lights {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0; /* Al fondo absoluto */
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.light {
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    border-radius: 50%;
+    filter: blur(150px);
+    opacity: 0.08; /* Ajustado para que se vea sutil pero elegante */
+}
+
+.light-gold {
+    background: #c5a059;
+    top: -10%; left: -10%;
+    animation: moveGold 20s infinite alternate ease-in-out;
+}
+
+.light-red {
+    background: #d40000;
+    bottom: -10%; right: -10%;
+    animation: moveRed 20s infinite alternate ease-in-out;
+}
+
+@keyframes moveGold { 0% { transform: translate(0,0); } 100% { transform: translate(15vw, 10vh); } }
+@keyframes moveRed { 0% { transform: translate(0,0); } 100% { transform: translate(-15vw, -10vh); } }
+
+/* --- CONTENIDO (SIEMPRE ARRIBA) --- */
+#app-canvas {
+    position: relative;
+    z-index: 10; /* Esto asegura que el texto esté por encima de las luces */
+}
 
 /* LOADER / INTRO */
 #loader-portal {
@@ -22,139 +68,18 @@ body { background: var(--black); font-family: 'Montserrat', sans-serif; color: v
 }
 
 .intro-content { text-align: center; color: var(--black); }
+.intro-word { font-family: 'Cinzel', serif; font-size: 5vw; font-weight: 900; opacity: 0; letter-spacing: 15px; margin: 10px 0; }
 
-.intro-word {
-    font-family: 'Cinzel', serif;
-    font-size: 5vw;
-    font-weight: 900;
-    opacity: 0;
-    letter-spacing: 15px;
-    margin: 10px 0;
-}
-
-.intro-bar {
-    width: 0%; height: 4px; background: var(--black); margin: 20px auto;
-}
-
-/* LOGO ORO */
-.gold-logo {
-    font-family: 'Cinzel', serif;
-    font-weight: 900;
-    font-size: 2rem;
-    background: var(--gold-grad);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: 5px;
-}
-
-/* NAV */
-.nav {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 40px 10%; position: absolute; width: 100%; z-index: 100;
-}
-
-/* HERO */
-.hero {
-    height: 100vh; display: flex; align-items: center; justify-content: center;
-    background: radial-gradient(circle at center, #111 0%, #000 100%);
-    text-align: center;
-}
-
-.hero-title { font-size: 6vw; font-family: 'Cinzel', serif; line-height: 1; }
+/* ESTILOS DE TEXTO */
+.gold-logo { font-family: 'Cinzel', serif; font-weight: 900; font-size: 2rem; background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 5px; }
+.hero { height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 0 10%; }
+.hero-title { font-size: 6vw; font-family: 'Cinzel', serif; line-height: 1.1; z-index: 20; position: relative; }
 .gold-text { background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-/* PORTFOLIO */
-.project-row {
-    padding: 100px 10%; display: flex; align-items: center;
-    border-bottom: 1px solid #1a1a1a;
-}
-
-.project-row.reversed { flex-direction: row-reverse; text-align: right; }
-
-.project-info h3 { font-family: 'Cinzel', serif; font-size: 3rem; margin: 20px 0; }
-.p-num { color: var(--gold-grad); font-weight: 900; font-size: 1.5rem; }
-
-.btn-project {
-    display: inline-block; margin-top: 30px; padding: 15px 40px;
-    border: 1px solid var(--white); color: var(--white); text-decoration: none;
-    transition: 0.3s;
-}
-
-.btn-project:hover { background: var(--white); color: var(--black); }
-
-/* BOTÓN ROJO MAESTRO */
-.mega-cta { text-align: center; padding: 150px 0; }
-
-.btn-red-action {
-    background: var(--red-action);
-    color: var(--white);
-    padding: 30px 80px;
-    font-size: 2rem;
-    font-weight: 900;
-    text-decoration: none;
-    border-radius: 5px;
-    box-shadow: 0 0 50px rgba(212, 0, 0, 0.4);
-    transition: 0.4s;
-    display: inline-block;
-}
-
-.btn-red-action:hover { transform: scale(1.1); background: #ff0000; box-shadow: 0 0 70px rgba(212, 0, 0, 0.6); }
+/* PROYECTOS Y BOTÓN ROJO */
+.project-row { padding: 100px 10%; position: relative; z-index: 20; border-bottom: 1px solid #1a1a1a; }
+.btn-red-action { background: var(--red-action); color: var(--white); padding: 25px 60px; font-size: 1.8rem; font-weight: 900; text-decoration: none; border-radius: 5px; display: inline-block; box-shadow: 0 0 40px rgba(212, 0, 0, 0.3); transition: 0.4s; }
+.btn-red-action:hover { transform: scale(1.05); box-shadow: 0 0 60px rgba(212, 0, 0, 0.5); }
 
 /* REVIEWS */
-.reviews { padding: 100px 5%; background: var(--gray-soft); }
-.reviews-slider { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-.review-card { padding: 30px; border: 1px solid #222; font-style: italic; color: #aaa; }
-
-/* FOOTER */
-.legal-footer { padding: 50px; text-align: center; font-size: 0.7rem; border-top: 1px solid #222; }
-
-/* LUCES DE FONDO ANIMADAS */
-body {
-    background: #000;
-    position: relative;
-    overflow-x: hidden;
-}
-
-/* Cramos dos esferas de luz que se mueven en el fondo */
-body::before, body::after {
-    content: "";
-    position: fixed;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    filter: blur(120px);
-    z-index: -1;
-    opacity: 0.15;
-    animation: moveLights 20s infinite alternate;
-}
-
-body::before {
-    background: var(--gold-grad);
-    top: -10%;
-    left: -10%;
-}
-
-body::after {
-    background: var(--red-action);
-    bottom: -10%;
-    right: -10%;
-    animation-delay: -10s;
-}
-
-@keyframes moveLights {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(20vw, 20vh); }
-}
-
-/* Efecto de revelación para las secciones al scrolear */
-.project-row, .review-card, .final-word {
-    opacity: 0;
-    transform: translateY(50px);
-    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-/* Clase que aplicará JS cuando el elemento entre en vista */
-.is-visible {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-}
+.reviews { padding: 80px 10%; background: rgba(10,10,10,0.8); position: relative; z-index: 20; }
