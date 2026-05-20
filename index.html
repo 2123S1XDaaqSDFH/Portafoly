@@ -42,21 +42,6 @@
             text-transform: uppercase;
         }
 
-        /* --- LOADER CINEMÁTICO --- */
-        #loader {
-            position: fixed;
-            inset: 0;
-            background: #000;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .loader-brand { font-size: 3.5rem; margin-bottom: 2rem; font-weight: 900; }
-        .loader-track { width: 300px; height: 1px; background: rgba(197, 160, 89, 0.1); position: relative; }
-        .loader-bar { position: absolute; left: 0; top: 0; height: 100%; background: var(--gold); width: 0%; }
-
         /* --- CURSOR PERSONALIZADO --- */
         #cursor {
             width: 8px; height: 8px; background: var(--gold);
@@ -176,15 +161,6 @@
 </head>
 <body>
 
-    <!-- LOADER -->
-    <div id="loader">
-        <div class="loader-brand text-gold luxury-font">JOEX</div>
-        <div class="loader-track"><div class="loader-bar" id="load-bar"></div></div>
-        <div class="mt-6 text-[9px] tracking-[0.8em] uppercase opacity-40 font-light" id="load-status">
-            INITIALIZING ARCHITECTURE
-        </div>
-    </div>
-
     <!-- ELEMENTOS VISUALES FIJOS -->
     <div id="cursor"></div>
     <div id="cursor-follower"></div>
@@ -296,7 +272,7 @@
         </div>
     </section>
 
-    <!-- PORTAFOLIO MEJORADO (ACTIVOS DIGITALES) -->
+    <!-- PORTAFOLIO (ACTIVOS DIGITALES) -->
     <section id="activos" class="section-p">
         <div class="container mx-auto px-8 md:px-16">
             <div class="text-center mb-24">
@@ -354,7 +330,7 @@
                 </div>
             </div>
 
-            <!-- MEGA CTA IMPACTANTE PARA EL ATRACTOR VISUAL -->
+            <!-- MEGA CTA IMPACTANTE -->
             <div class="mt-32 text-center">
                 <h2 class="text-3xl md:text-5xl font-bold luxury-font mb-8 reveal" data-key="cta-title">¿Listo para dominar su mercado?</h2>
                 <p class="text-gray-400 max-w-xl mx-auto mb-12 text-sm font-light tracking-wide" data-key="cta-desc">Nuestros cupos de desarrollo mensuales son estrictamente limitados. Asegure el despliegue de su arquitectura premium hoy mismo.</p>
@@ -386,9 +362,9 @@
         </div>
     </footer>
 
-    <!-- LOGIC ENGINE: ANIMACIONES, THREE.JS & MOTOR MULTILINGÜE -->
+    <!-- LOGIC ENGINE -->
     <script>
-        // 1. DICCIONARIO DE IDIOMAS (6 IDIOMAS NATIVOS COMPLETOS)
+        // 1. DICCIONARIO DE IDIOMAS MUNDIAL (CORREGIDO)
         const translations = {
             es: {
                 "nav-about": "La Firma", "nav-services": "Servicios", "nav-portfolio": "Portafolio", "nav-cta": "Concierge Privado",
@@ -459,7 +435,7 @@
                 "p2-desc": "Plataforma gourmet digital interativa. Foco em alta gastronomia, otimizado para vendas e retenção sensorial.",
                 "p3-desc": "Arquitetura de análise de dados de alto rendimento para atletas de elite. Engenharia de precisão.",
                 "p4-desc": "Exibição digital e sistema de conversão para o mercado de veículos exóticos. Interface escura e sofisticada.",
-                "cta-title": "Pronto para dominar seu mercado?", "cta-desc": "Nossas vagas mensais são estritamente limitadas. Garanta seu ecossistema premium hoje.",
+                "cta-title": "Pronto para dominar seu mercado?", "cta-desc": "Nossas vagas mensais son estritamente limitadas. Garanta seu ecossistema premium hoje.",
                 "main-cta-btn": "Adquirir Ecossistema Elite", "faq-title": "Perguntas de <span class='text-gold'>Consultoria</span>",
                 "q1-t": "O QUE GARANTE A ALTA CONVERSÃO DA JOEX®?", "q1-d": "Fusão de código otimizado, animações persuasivas e fluxos UX projetados para eliminar qualquer atrito comercial.",
                 "q2-t": "COMO FUNCIONA O SISTEMA MULTILÍNGUE?", "q2-d": "Mapeamento JSON nativo assíncrono que altera toda a interface em milissegundos sem recarregar a página.",
@@ -481,9 +457,9 @@
                 "srv3-t": "E-Commerce de Haute Volée", "srv3-d": "Boutiques en ligne optimisées pour maximiser la conversion et offrir une expérience d'achat fluide.",
                 "port-title": "Actifs <span class='text-gold'>Déployés</span>", "port-subtitle": "Études de cas à haute conversion",
                 "btn-view": "Voir le Projet", "p1-desc": "Portfolio de luxe personnel. Identité visuelle épurée combinée avec des transitions fluides haut de gamme.",
-                "p2-desc": "Plateforme gastronomique interactive. Approche immersive haut de gamme optimisée pour la rétention sensorielle.",
+                "p2-desc": "Plateforme gastronomique gérant l'interactivité. Approche immersive haut de gamme optimisée pour la rétention estivale.",
                 "p3-desc": "Architecture d'analyse et de visualisation de données sportives de haute performance pour athlètes de haut niveau.",
-                "p4-desc": "Vitrine numérique de prestige et système de conversion pour le marché des véhicules de luxe et exotiques.",
+                "p4-desc": "Vitrine numérique de prestige et système de conversion para le marché des véhicules de luxe et exotiques.",
                 "cta-title": "Prêt à dominer votre marché?", "cta-desc": "Nos créneaux de développement mensuels sont strictement limités. Sécurisez votre architecture premium aujourd'hui.",
                 "main-cta-btn": "Acquérir l'Écosystème Élite", "faq-title": "Questions d'<span class='text-gold'>Ingénierie</span>",
                 "q1-t": "QU'EST-CE QUI GARANTIT LA HAUTE CONVERSION DE JOEX®?", "q1-d": "Le mariage parfait entre un code ultra-rapide, des visuels cinétiques captivants et des tunnels d'achat psychologiquement optimisés.",
@@ -510,8 +486,10 @@
                 "p3-desc": "High-Performance-Datenanalyseplattform für Leistungssportler. Präzisions-Engineering für Tracking-Metriken.",
                 "p4-desc": "Premium-Showroom und Konversionssystem für den Markt für Luxusfahrzeuge und exotische Automobile.",
                 "cta-title": "Bereit, Ihren Markt zu dominieren?", "cta-desc": "Unsere monatlichen Entwicklungskapazitäten sind streng limitiert. Sichern Sie sich noch heute Ihr Premium-System.",
-                "main-cta-btn": "Elite-System Erwerben", "faq-title": "Engineering <span class='text-gold'>Fragen</span>",
-                "q1-t": WAS GARANTIERT DIE HOHE KONVERSION VON JOEX®?, "q1-d": "Die Fusion aus optimiertem Code, faszinierenden kinetischen Animationen und reibungslosen, psychologischen UX-Strukturen.",
+                "main-cta-btn": "Elite-System Erwerben", 
+                "faq-title": "Engineering <span class='text-gold'>Fragen</span>",
+                "q1-t": "WAS GARANTIERT DIE HOHE KONVERSION VON JOEX®?", 
+                "q1-d": "Die Fusion aus optimiertem Code, faszinierenden kinetischen Animationen und reibungslosen, psychologischen UX-Strukturen.",
                 "q2-t": "WIE LÄUFT DER MULTILINGUALE SPRACHWECHSEL?", "q2-d": "Über ein asynchrones natives JSON-Mapping, das die Benutzeroberfläche in Millisekunden ohne Ladezeit anpasst.",
                 "footer-copy": "JOEX International Firm © 2026 • Digital Sovereignty • Medellín, Colombia"
             },
@@ -557,34 +535,7 @@
             });
         }
 
-        // 3. GESTOR DE CARGA PREMIUM
-        window.addEventListener('load', () => {
-            let progress = 0;
-            const bar = document.getElementById('load-bar');
-            const status = document.getElementById('load-status');
-            
-            const phases = ["LOADING SYSTEMS", "INJECTING GSAP", "RENDERING THREE.JS CORE", "ENCRYPTING INTERFACES"];
-            
-            const timer = setInterval(() => {
-                progress += Math.random() * 12;
-                if (progress > 100) progress = 100;
-                bar.style.width = progress + '%';
-                
-                if(progress > 25) status.innerText = phases[1];
-                if(progress > 55) status.innerText = phases[2];
-                if(progress > 85) status.innerText = phases[3];
-
-                if (progress === 100) {
-                    clearInterval(timer);
-                    gsap.to('#loader', { opacity: 0, duration: 1.2, ease: "power4.inOut", onComplete: () => {
-                        document.getElementById('loader').style.display = 'none';
-                        startAnimations();
-                    }});
-                }
-            }, 80);
-        });
-
-        // 4. SISTEMA DE CURSOR CINÉTICO ELITE
+        // 3. CURSOR CINÉTICO ELITE
         const cur = document.getElementById('cursor');
         const fol = document.getElementById('cursor-follower');
         document.addEventListener('mousemove', (e) => {
@@ -592,7 +543,7 @@
             gsap.to(fol, { x: e.clientX - 20, y: e.clientY - 20, duration: 0.3 });
         });
 
-        // 5. MOTOR DE RENDERING 3D: NEBULA ESTELAR (Three.js)
+        // 4. MOTOR DE RENDERING 3D: NEBULA ESTELAR (Three.js)
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 2000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true, powerPreference: "high-performance" });
@@ -622,7 +573,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
 
-        // 6. CONTROL ORQUESTADO DE ANIMACIONES (GSAP + SCROLLTRIGGER)
+        // 5. EJECUCIÓN INMEDIATA DE ANIMACIONES (GSAP + SCROLLTRIGGER)
         gsap.registerPlugin(ScrollTrigger);
 
         function startAnimations() {
@@ -632,7 +583,7 @@
               .to("#hero-desc", { opacity: 1, duration: 1.2, ease: "power3.out" }, "-=0.8")
               .to("#hero-btns", { opacity: 1, duration: 0.8, ease: "power2.out" }, "-=0.8");
 
-            // Activación dinámica de clip-paths al hacer scroll
+            // Revelación fluida basada en scroll para secciones inferiores
             document.querySelectorAll('.reveal').forEach(el => {
                 ScrollTrigger.create({
                     trigger: el,
@@ -643,7 +594,10 @@
             });
         }
 
-        // Control estético de la barra de navegación
+        // Lanzamiento instantáneo al cargar el DOM
+        document.addEventListener('DOMContentLoaded', startAnimations);
+
+        // Barra de navegación dinámica
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             if (window.scrollY > 60) {
