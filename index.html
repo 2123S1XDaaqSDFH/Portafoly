@@ -2,355 +2,679 @@
 <html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>JOEX® | Agencia Digital</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JOEX | Luxury Car Rental Portfolio & Digital Experience</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Montserrat:wght@100;300;600;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Montserrat:wght@100;200;300;400;600&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --gold: #c5a059;
-            --gold-grad: linear-gradient(135deg, #c5a059 0%, #f7efad 50%, #c5a059 100%);
-            --red-action: #d40000;
-            --black: #000000;
-            --white: #ffffff;
-            --wa-green: #25d366;
+            --gold-light: #e3c186;
+            --dark: #050505;
+            --dark-soft: #0a0a0a;
+            --cream: #f4f4f4;
+            --transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { cursor: none !important; margin: 0; padding: 0; box-sizing: border-box; }
 
-        body { 
-            background: var(--black); 
-            font-family: 'Montserrat', sans-serif; 
-            color: var(--white); 
+        body {
+            background-color: var(--dark);
+            color: var(--cream);
+            font-family: 'Montserrat', sans-serif;
             overflow-x: hidden;
-            width: 100%;
+            line-height: 1.6;
         }
 
-        /* --- CANVAS DE PARTÍCULAS --- */
-        #particles-canvas {
+        h1, h2, h3, h4, .luxury-font { 
+            font-family: 'Cinzel', serif; 
+            letter-spacing: 0.2em; 
+            text-transform: uppercase;
+        }
+
+        /* --- LOADER CINEMÁTICO --- */
+        #loader {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 1;
-            pointer-events: none;
+            inset: 0;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s ease;
+        }
+        .loader-brand { font-size: 3rem; margin-bottom: 2rem; }
+        .loader-track { width: 300px; height: 1px; background: rgba(197, 160, 89, 0.1); position: relative; }
+        .loader-bar { position: absolute; left: 0; top: 0; height: 100%; background: var(--gold); width: 0%; }
+
+        /* --- CURSOR PERSONALIZADO CONTEMPORÁNEO --- */
+        #cursor {
+            width: 8px; height: 8px; background: var(--gold);
+            border-radius: 50%; position: fixed; pointer-events: none;
+            z-index: 10000; mix-blend-mode: difference;
+        }
+        #cursor-follower {
+            width: 40px; height: 40px; border: 1px solid var(--gold);
+            border-radius: 50%; position: fixed; pointer-events: none;
+            z-index: 9999; transition: transform 0.1s ease-out;
         }
 
-        .bg-lights {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 0;
+        /* --- TEXTO DE GRADIENTE METÁLICO --- */
+        .text-gold {
+            background: linear-gradient(135deg, #c5a059 0%, #f9f295 50%, #c5a059 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .light {
-            position: absolute; width: 80vw; height: 80vw;
-            border-radius: 50%; filter: blur(140px); opacity: 0.07;
-        }
-        .light-gold { background: var(--gold); top: -20%; left: -20%; }
-        .light-red { background: var(--red-action); bottom: -20%; right: -20%; }
-
-        /* --- LOADER --- */
-        #loader-portal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100vh;
-            background: var(--black); z-index: 10000;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        .intro-word {
-            font-family: 'Cinzel', serif;
-            background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-weight: 900; opacity: 0; transform: translateY(20px); text-align: center;
-        }
-        .word-bienvenido { font-size: 14px; letter-spacing: 12px; margin-bottom: 10px; }
-        .word-joex { font-size: 15vw; letter-spacing: 25px; }
-
-        /* --- AUDIO --- */
-        .audio-control {
-            position: fixed; bottom: 30px; left: 30px; z-index: 2000;
-            display: flex; align-items: center; gap: 12px;
-            background: rgba(255,255,255,0.05); backdrop-filter: blur(15px);
-            padding: 12px 20px; border-radius: 50px; border: 1px solid rgba(197, 160, 89, 0.2);
-            cursor: pointer; opacity: 0; transition: 0.3s;
-        }
-        .music-bars { display: flex; align-items: flex-end; gap: 3px; height: 18px; }
-        .bar { width: 3px; background: var(--gold); animation: musicWave 1.2s infinite ease-in-out; }
-        .bar:nth-child(2) { animation-delay: 0.2s; height: 100%; }
-        .bar:nth-child(3) { animation-delay: 0.4s; height: 65%; }
-
-        @keyframes musicWave { 0%, 100% { height: 35%; } 50% { height: 100%; } }
-        .music-text { font-size: 9px; font-weight: 900; letter-spacing: 2px; color: var(--gold); }
-        .muted .bar { animation-play-state: paused; opacity: 0.3; }
-
-        /* --- WHATSAPP --- */
-        #wa-anchor {
-            position: fixed; bottom: 30px; right: 30px; z-index: 2000;
-            width: 60px; height: 60px; opacity: 0;
-        }
-        .whatsapp-pulse {
-            position: absolute; width: 100%; height: 100%;
-            background: var(--wa-green); border-radius: 50%; animation: pulseWA 2s infinite;
-        }
-        .whatsapp-float {
-            position: relative; background: var(--wa-green); width: 100%; height: 100%;
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-        }
-        .whatsapp-float img { width: 30px; filter: brightness(0) invert(1); }
-        @keyframes pulseWA { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(1.7); opacity: 0; } }
-
-        /* --- UI ELEMENTS --- */
-        .nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 8%; position: fixed; width: 100%; top: 0;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(15px); z-index: 1000;
+        .glass-nav {
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(30px);
             border-bottom: 1px solid rgba(197, 160, 89, 0.1);
         }
-        .gold-logo {
-            font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 900;
-            background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: 4px;
+
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+        .section-p { padding: 140px 0; }
+
+        /* --- BOTONES Y COMPONENTES PREMIUM --- */
+        .btn-luxury {
+            border: 1px solid var(--gold);
+            padding: 18px 45px;
+            font-size: 10px;
+            letter-spacing: 0.4em;
+            color: var(--gold);
+            background: transparent;
+            transition: var(--transition);
+            display: inline-block;
+            position: relative;
+            text-transform: uppercase;
+        }
+        .btn-luxury:hover { 
+            background: var(--gold); 
+            color: #000; 
+            box-shadow: 0 0 35px rgba(197, 160, 89, 0.35); 
+            transform: scale(1.02);
         }
 
-        .hero { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; z-index: 10; }
-        .hero-title { font-family: 'Cinzel', serif; font-size: clamp(2.2rem, 7vw, 6rem); line-height: 1.1; font-weight: 900; opacity: 0; }
-        .gold-text { background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        .portfolio { padding: 100px 0; position: relative; z-index: 10; }
-        .portfolio-header { text-align: center; margin-bottom: 80px; opacity: 0; }
-        .portfolio-header h2 { font-family: 'Cinzel', serif; font-size: clamp(2rem, 5vw, 3.5rem); color: var(--gold); letter-spacing: 10px; }
-
-        .project-row { padding: 80px 10%; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; }
-        .project-info h3 { font-family: 'Cinzel', serif; font-size: clamp(1.8rem, 4vw, 3rem); margin-bottom: 20px; color: var(--white); }
-        .project-info p { color: #aaa; max-width: 800px; margin: 0 auto 40px; font-weight: 300; line-height: 1.8; }
-        
-        .btn-project { 
-            color: var(--white); text-decoration: none; border: 1px solid var(--gold); 
-            padding: 15px 35px; font-weight: 600; text-transform: uppercase; letter-spacing: 3px;
-            font-size: 0.8rem; transition: 0.4s; display: inline-block; cursor: pointer;
+        /* TARJETAS DE SERVICIOS */
+        .card-service {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid rgba(197, 160, 89, 0.05);
+            padding: 60px 45px;
+            transition: var(--transition);
         }
-        .btn-project:hover { background: var(--gold); color: var(--black); box-shadow: 0 0 20px rgba(197,160,89,0.4); }
-
-        .btn-red-action {
-            background: var(--red-action); color: #fff; padding: 25px 50px;
-            font-size: clamp(0.9rem, 3vw, 1.3rem); font-weight: 900; text-decoration: none;
-            text-transform: uppercase; letter-spacing: 4px; display: inline-block; transition: 0.3s;
+        .card-service:hover {
+            background: rgba(197, 160, 89, 0.02);
+            border-color: var(--gold);
+            transform: translateY(-10px);
         }
-        .btn-red-action:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(212,0,0,0.4); }
 
-        .legal-footer { padding: 60px 5%; text-align: center; font-size: 0.7rem; color: #333; letter-spacing: 4px; }
+        /* VEHICLE PORTFOLIO CARDS */
+        .fleet-card {
+            background: #0a0a0a;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        .fleet-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+        .fleet-img {
+            transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .fleet-card:hover .fleet-img {
+            transform: scale(1.08) rotate(0.5deg);
+        }
+
+        /* --- EFECTO REVEAL PARA ELEMENTOS --- */
+        .reveal { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); transition: clip-path 1.5s cubic-bezier(0.19, 1, 0.22, 1); }
+        .reveal.active { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+
+        /* SCROLLBAR COMPACTO */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--dark); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); }
     </style>
 </head>
 <body>
 
-    <canvas id="particles-canvas"></canvas>
-
-    <div class="bg-lights">
-        <div class="light light-gold"></div>
-        <div class="light light-red"></div>
-    </div>
-
-    <!-- AUDIO SYSTEM -->
-    <div class="audio-control" id="audio-btn">
-        <div class="music-bars" id="bars-container">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
-        <span class="music-text" id="music-status">AUDIO: OFF</span>
-        <audio id="bg-audio" loop>
-            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
-        </audio>
-    </div>
-
-    <!-- WHATSAPP -->
-    <div id="wa-anchor">
-        <div class="whatsapp-pulse"></div>
-        <a href="https://wa.me/573184499437" class="whatsapp-float" target="_blank">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-        </a>
-    </div>
-
     <!-- LOADER -->
-    <div id="loader-portal">
-        <div class="intro-content">
-            <span class="intro-word word-bienvenido">BIENVENIDO A</span>
-            <span class="intro-word word-joex">JOEX</span>
+    <div id="loader">
+        <div class="loader-brand text-gold luxury-font">JOEX</div>
+        <div class="loader-track"><div class="loader-bar" id="load-bar"></div></div>
+        <div class="mt-8 text-[9px] tracking-[0.8em] uppercase opacity-40 font-light text-center" data-i18n="loader-auth">
+            Experiencia de Conserjería Exclusiva
         </div>
     </div>
 
-    <div id="app-canvas" style="opacity: 0;">
-        <nav class="nav">
-            <div class="gold-logo">JOEX<span>®</span></div>
-            <div style="font-size: 8px; color: var(--gold); font-weight: 900; letter-spacing: 2px;">EST. 2026</div>
-        </nav>
+    <!-- CURSOR PERSONALIZADO -->
+    <div id="cursor"></div>
+    <div id="cursor-follower"></div>
+    <canvas id="bg-canvas"></canvas>
 
-        <section class="hero">
-            <h1 class="hero-title" id="main-title">FORJANDO LA ÉLITE DEL<br><span class="gold-text">FUTURO DIGITAL</span></h1>
-        </section>
-
-        <section id="proyectos" class="portfolio">
-            <div class="portfolio-header">
-                <h2>PORTAFOLIO</h2>
-                <p>Ecosistemas de Clase Mundial</p>
-            </div>
-
-            <!-- PROYECTO 1: PC GAMER -->
-            <div class="project-row">
-                <div class="project-info">
-                    <h3>PC GAMER BUENOS AIRES</h3>
-                    <p>Optimización y arquitectura visual para el mercado gamer de alto rendimiento.</p>
-                    <a href="https://2123s1xdaaqsdfh.github.io/PC-GAMER/" target="_blank" class="btn-project">VER PROYECTO</a>
+    <!-- NAVBAR PREMIUM -->
+    <nav class="fixed w-full z-[500] py-8 px-8 md:px-16 transition-all duration-700" id="navbar">
+        <div class="max-w-[1800px] mx-auto flex justify-between items-center">
+            <div class="text-3xl font-black text-gold luxury-font tracking-[0.2em]">JOEX</div>
+            
+            <div class="hidden lg:flex space-x-16 items-center">
+                <div class="flex space-x-10 uppercase text-[9px] tracking-[0.4em] font-light text-gray-400">
+                    <a href="#portfolio" class="hover:text-gold transition" data-i18n="nav-fleet">Flota</a>
+                    <a href="#nosotros" class="hover:text-gold transition" data-i18n="nav-about">La Firma</a>
+                    <a href="#servicios" class="hover:text-gold transition" data-i18n="nav-services">Servicios</a>
                 </div>
-            </div>
-
-            <!-- PROYECTO 2: TECNIBABY (NUEVO) -->
-            <div class="project-row">
-                <div class="project-info">
-                    <h3>TECNIBABY</h3>
-                    <p>Plataforma especializada en mantenimiento premium y cuidado de coches para bebés.</p>
-                    <a href="https://2123s1xdaaqsdfh.github.io/limpiezadecochesdebebe.com/" target="_blank" class="btn-project">VER PROYECTO</a>
+                
+                <!-- SELECTOR DE IDIOMA INTERACTIVO -->
+                <div class="flex items-center space-x-4 border-l border-white/10 pl-8 text-[10px] tracking-widest font-light">
+                    <button onclick="switchLang('es')" id="btn-es" class="text-gold font-bold transition">ES</button>
+                    <span class="opacity-20">|</span>
+                    <button onclick="switchLang('en')" id="btn-en" class="text-gray-500 hover:text-white transition">EN</button>
                 </div>
+
+                <a href="https://wa.me/573184499437" target="_blank" class="btn-luxury py-3 px-8" data-i18n="nav-cta">Reservar Ahora</a>
             </div>
 
-            <!-- PROYECTO 3: RC AUTOS (NUEVO) -->
-            <div class="project-row">
-                <div class="project-info">
-                    <h3>RC AUTOS</h3>
-                    <p>Exhibición digital de vehículos seleccionados con interfaz de alta gama.</p>
-                    <a href="https://joex-tech.github.io/RC-AUTOS/" target="_blank" class="btn-project">VER PROYECTO</a>
-                </div>
+            <!-- MENU MÓVIL DISPARADOR -->
+            <div class="lg:hidden flex items-center space-x-6 text-gold">
+                <button onclick="toggleMobileLang()" class="text-xs uppercase tracking-wider border border-gold/30 px-2 py-1 text-[9px]">ES/EN</button>
+                <i class="fa-solid fa-bars-staggered text-xl" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"></i>
             </div>
+        </div>
+    </nav>
 
-            <!-- PROYECTO 4: PROSPEKTA BPO -->
-            <div class="project-row">
-                <div class="project-info">
-                    <h3>PROSPEKTA BPO</h3>
-                    <p>Sistema de gestión de leads masivo y arquitectura de ventas regional.</p>
-                    <a href="https://2123s1xdaaqsdfh.github.io/Prospekta/" target="_blank" class="btn-project">VER PROYECTO</a>
-                </div>
-            </div>
-
-            <!-- PROYECTO 5: IMPRONTO SAS -->
-            <div class="project-row">
-                <div class="project-info">
-                    <h3>IMPRONTO SAS</h3>
-                    <p>Identidad industrial y solidez institucional para el sector de ingeniería.</p>
-                    <a href="https://2123s1xdaaqsdfh.github.io/impronto/" target="_blank" class="btn-project">VER PROYECTO</a>
-                </div>
-            </div>
-
-            <div class="mega-cta" style="text-align: center; padding: 100px 0;">
-                <a href="https://wa.me/573184499437" class="btn-red-action">SOLICITAR CONSULTORÍA</a>
-            </div>
-        </section>
-
-        <footer class="legal-footer">
-            <p>JOEX ® 2026. MEDELLÍN, COLOMBIA.</p>
-        </footer>
+    <!-- MENÚ MÓVIL DESPLEGABLE -->
+    <div id="mobile-menu" class="hidden fixed inset-0 bg-black/95 z-[499] flex flex-col justify-center items-center space-y-10 uppercase text-xs tracking-[0.4em]">
+        <i class="fa-solid fa-xmark text-gold text-2xl absolute top-10 right-10" onclick="document.getElementById('mobile-menu').classList.add('hidden')"></i>
+        <a href="#portfolio" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="text-white hover:text-gold" data-i18n="nav-fleet">Flota</a>
+        <a href="#nosotros" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="text-white hover:text-gold" data-i18n="nav-about">La Firma</a>
+        <a href="#servicios" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="text-white hover:text-gold" data-i18n="nav-services">Servicios</a>
+        <a href="https://wa.me/573184499437" target="_blank" class="btn-luxury" data-i18n="nav-cta">Reservar Ahora</a>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- HERO SECTION -->
+    <section class="min-h-screen flex flex-col justify-center items-center relative text-center px-6">
+        <div class="z-10 mt-16 max-w-6xl">
+            <p class="text-[9px] uppercase tracking-[0.9em] text-gold mb-12 opacity-0 translate-y-10 font-medium" id="hero-tag" data-i18n="hero-sub">
+                EXPERIENCIA DE CONDUCCIÓN SUPREMA • MEDELLÍN
+            </p>
+            <h1 class="text-5xl md:text-[6.5vw] font-black leading-[1.1] mb-12 opacity-0" id="hero-main">
+                DOMINIO & <br> <span class="text-gold">SOBERANÍA EN RUTA</span>
+            </h1>
+            <div class="h-[1px] w-24 bg-gold mx-auto mb-12"></div>
+            <p class="text-gray-400 text-base md:text-lg max-w-3xl mx-auto mb-16 font-light leading-relaxed tracking-wider opacity-0" id="hero-desc" data-i18n="hero-para">
+                Curamos la flota de superdeportivos y SUVs ejecutivas más imponente del país. Diseñado exclusivamente para quienes no admiten compromisos en rendimiento, estatus y privacidad.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-8 opacity-0" id="hero-btns">
+                <a href="#portfolio" class="btn-luxury" data-i18n="hero-btn-primary">Ver Portafolio de Lujo</a>
+                <a href="https://wa.me/573184499437" target="_blank" class="text-[10px] uppercase tracking-[0.4em] flex items-center gap-4 group hover:text-gold transition">
+                    <span data-i18n="hero-btn-secondary">Contacto VIP</span> <i class="fa-solid fa-arrow-right-long group-hover:translate-x-3 transition"></i>
+                </a>
+            </div>
+        </div>
+    </section>
 
+    <!-- PORTAFOLIO MULTIMEDIA DE VEHÍCULOS (ATRACTOR PRINCIPAL) -->
+    <section id="portfolio" class="section-p bg-[#030303] border-t border-b border-white/5">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-24 gap-8">
+                <div>
+                    <p class="text-gold text-[10px] tracking-[0.5em] uppercase mb-4" data-i18n="portfolio-sub">Curaduría Exclusiva</p>
+                    <h2 class="text-4xl md:text-6xl font-bold luxury-font"><span class="text-gold" data-i18n="portfolio-title-1">Nuestra Flota</span> <br><span data-i18n="portfolio-title-2">De Élite</span></h2>
+                </div>
+                
+                <!-- BOTONES FILTRO INTERACTIVO -->
+                <div class="flex flex-wrap gap-4 text-[9px] tracking-[0.3em] uppercase font-light">
+                    <button onclick="filterFleet('all')" class="border border-gold bg-gold text-black px-6 py-3 transition duration-500 rounded-none" id="filter-all" data-i18n="filter-all">Todos</button>
+                    <button onclick="filterFleet('suv')" class="border border-white/10 hover:border-gold px-6 py-3 transition duration-500 rounded-none" id="filter-suv">SUVs</button>
+                    <button onclick="filterFleet('sport')" class="border border-white/10 hover:border-gold px-6 py-3 transition duration-500 rounded-none" id="filter-sport" data-i18n="filter-sport">Deportivos</button>
+                </div>
+            </div>
+
+            <!-- REJILLA DEL PORTAFOLIO -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="fleet-grid">
+                
+                <!-- Vehículo 1 -->
+                <div class="fleet-card group" data-category="suv">
+                    <div class="relative overflow-hidden h-[300px] bg-neutral-900">
+                        <img src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&q=80&w=1200" alt="Toyota Prado" class="fleet-img w-full h-full object-cover grayscale group-hover:grayscale-0">
+                        <div class="absolute inset-0 bg-gradient-to-t filename from-black via-transparent to-transparent opacity-80"></div>
+                        <span class="absolute top-6 right-6 bg-black/80 border border-gold/30 text-gold font-light tracking-widest text-[9px] px-3 py-1 uppercase">SUV Premium</span>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-bold luxury-font text-white mb-2">Toyota Prado TXL</h3>
+                        <p class="text-gray-500 text-xs font-light tracking-wider mb-6" data-i18n="car-1-desc">Blindaje premium, confort absoluto en terrenos desafiantes.</p>
+                        <div class="flex justify-between items-center pt-4 border-t border-white/5">
+                            <div>
+                                <span class="text-[9px] text-gray-500 block uppercase tracking-widest" data-i18n="car-rent-label">Tarifa Corporativa</span>
+                                <span class="text-gold text-lg font-medium font-mono">$1.200.000<span class="text-xs text-gray-400 font-light"> / COP</span></span>
+                            </div>
+                            <a href="https://wa.me/573184499437?text=Quiero%20reservar%20la%20Toyota%20Prado" target="_blank" class="border border-gold/50 px-4 py-2 text-[9px] uppercase tracking-widest text-gold hover:bg-gold hover:text-black transition duration-500">
+                                <i class="fa-brands fa-whatsapp mr-1 text-sm"></i> <span data-i18n="car-btn">Alquilar</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehículo 2 -->
+                <div class="fleet-card group" data-category="sport">
+                    <div class="relative overflow-hidden h-[300px] bg-neutral-900">
+                        <img src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=1200" alt="Porsche 911" class="fleet-img w-full h-full object-cover grayscale group-hover:grayscale-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                        <span class="absolute top-6 right-6 bg-black/80 border border-gold/30 text-gold font-light tracking-widest text-[9px] px-3 py-1 uppercase">Super Sport</span>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-bold luxury-font text-white mb-2">Porsche 911 Carrera</h3>
+                        <p class="text-gray-500 text-xs font-light tracking-wider mb-6" data-i18n="car-2-desc">Ingeniería pura y deportividad atemporal para la ciudad.</p>
+                        <div class="flex justify-between items-center pt-4 border-t border-white/5">
+                            <div>
+                                <span class="text-[9px] text-gray-500 block uppercase tracking-widest" data-i18n="car-rent-label">Tarifa Corporativa</span>
+                                <span class="text-gold text-lg font-medium font-mono">$4.500.000<span class="text-xs text-gray-400 font-light"> / COP</span></span>
+                            </div>
+                            <a href="https://wa.me/573184499437?text=Quiero%20reservar%20el%20Porsche%20911" target="_blank" class="border border-gold/50 px-4 py-2 text-[9px] uppercase tracking-widest text-gold hover:bg-gold hover:text-black transition duration-500">
+                                <i class="fa-brands fa-whatsapp mr-1 text-sm"></i> <span data-i18n="car-btn">Alquilar</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehículo 3 -->
+                <div class="fleet-card group" data-category="sport">
+                    <div class="relative overflow-hidden h-[300px] bg-neutral-900">
+                        <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=1200" alt="VW Golf TSI" class="fleet-img w-full h-full object-cover grayscale group-hover:grayscale-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                        <span class="absolute top-6 right-6 bg-black/80 border border-gold/30 text-gold font-light tracking-widest text-[9px] px-3 py-1 uppercase">Sport Hatch</span>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-bold luxury-font text-white mb-2">Volkswagen Golf TSI</h3>
+                        <p class="text-gray-500 text-xs font-light tracking-wider mb-6" data-i18n="car-3-desc">Agilidad urbana, rendimiento deportivo y sofisticación eficiente.</p>
+                        <div class="flex justify-between items-center pt-4 border-t border-white/5">
+                            <div>
+                                <span class="text-[9px] text-gray-500 block uppercase tracking-widest" data-i18n="car-rent-label">Tarifa Corporativa</span>
+                                <span class="text-gold text-lg font-medium font-mono">$550.000<span class="text-xs text-gray-400 font-light"> / COP</span></span>
+                            </div>
+                            <a href="https://wa.me/573184499437?text=Quiero%20reservar%20el%20Golf%20TSI" target="_blank" class="border border-gold/50 px-4 py-2 text-[9px] uppercase tracking-widest text-gold hover:bg-gold hover:text-black transition duration-500">
+                                <i class="fa-brands fa-whatsapp mr-1 text-sm"></i> <span data-i18n="car-btn">Alquilar</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- APARTADO: NOSOTROS (LA FIRMA) -->
+    <section id="nosotros" class="section-p container mx-auto px-6 md:px-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+            <div class="relative">
+                <div class="absolute -top-16 -left-6 text-[14rem] font-black opacity-[0.015] luxury-font select-none">JOEX</div>
+                <h2 class="text-4xl md:text-5xl font-bold luxury-font mb-8 reveal" data-i18n="about-title">El Ecosistema <br><span class="text-gold">De Alto Rendimiento</span></h2>
+                <p class="text-gray-400 text-base font-light leading-loose mb-8" data-i18n="about-para-1">
+                    En JOEX, fusionamos la ingeniería de software interactiva de vanguardia con la curaduría logística más exclusiva en renta de vehículos. Entendemos que el traslado de ejecutivos de élite y creadores exige la misma precisión informática que una infraestructura digital de nivel bancario.
+                </p>
+                <p class="text-gray-500 text-sm font-light leading-relaxed mb-10" data-i18n="about-para-2">
+                    Operamos bajo estrictos acuerdos de confidencialidad (NDA), sirviendo como el puente de prestigio que conecta marcas globales, tecnología inmersiva y movilidad premium.
+                </p>
+                <div class="grid grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-gold text-sm font-bold tracking-widest mb-3" data-i18n="about-v1-title">CONSERJERÍA 24/7</h4>
+                        <p class="text-xs text-gray-500 tracking-wider" data-i18n="about-v1-desc">Atención y despacho inmediato de vehículos sin fricciones burocráticas.</p>
+                    </div>
+                    <div>
+                        <h4 class="text-gold text-sm font-bold tracking-widest mb-3" data-i18n="about-v2-title">ESTÉTICA INMERSIVA</h4>
+                        <p class="text-xs text-gray-500 tracking-wider" data-i18n="about-v2-desc">Diseños digitales y experiencias de conducción configuradas al detalle absoluto.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="relative group">
+                <div class="absolute inset-0 border border-gold/10 translate-x-4 translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition duration-1000"></div>
+                <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=1500" alt="Luxury Automotive Design" class="relative z-10 grayscale hover:grayscale-0 transition duration-1000 w-full h-[500px] object-cover">
+            </div>
+        </div>
+    </section>
+
+    <!-- APARTADO: SERVICIOS EXCLUSIVOS -->
+    <section id="servicios" class="section-p bg-[#030303] border-t border-white/5">
+        <div class="container mx-auto px-6 md:px-12">
+            <div class="text-center mb-32">
+                <h2 class="text-4xl md:text-6xl font-bold luxury-font mb-6" data-i18n="services-title">Arquitectura de <span class="text-gold">Servicios</span></h2>
+                <p class="text-gray-500 uppercase tracking-[0.4em] text-[10px]" data-i18n="services-sub">Ingeniería aplicativa y movilidad corporativa</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 border border-white/5">
+                
+                <!-- Servicio 1 -->
+                <div class="card-service">
+                    <span class="text-gold text-[10px] tracking-[0.4em] block mb-10">01 / MOBILITY</span>
+                    <h3 class="text-xl font-bold mb-6" data-i18n="srv-1-title">Alquiler Corporativo Premium</h3>
+                    <p class="text-gray-500 font-light text-sm leading-relaxed mb-8" data-i18n="srv-1-desc">Flota premium disponible para CEOs, inversionistas internacionales y productoras de contenido con máxima privacidad.</p>
+                    <ul class="text-[9px] space-y-3 tracking-widest uppercase opacity-40">
+                        <li>• Chauffeur Service Opcional</li>
+                        <li>• Vehículos Blindados</li>
+                    </ul>
+                </div>
+
+                <!-- Servicio 2 -->
+                <div class="card-service border-y md:border-y-0 md:border-x border-white/5">
+                    <span class="text-gold text-[10px] tracking-[0.4em] block mb-10">02 / EXPERIENCES</span>
+                    <h3 class="text-xl font-bold mb-6" data-i18n="srv-2-title">Experiencias Inmersivas</h3>
+                    <p class="text-gray-500 font-light text-sm leading-relaxed mb-8" data-i18n="srv-2-desc">Desarrollo de landing pages de alta gama y arquitecturas interactivas que transforman la navegación en deseo de compra.</p>
+                    <ul class="text-[9px] space-y-3 tracking-widest uppercase opacity-40">
+                        <li>• Animaciones GSAP / WebGL</li>
+                        <li>• UX Orientada al Lujo</li>
+                    </ul>
+                </div>
+
+                <!-- Servicio 3 -->
+                <div class="card-service">
+                    <span class="text-gold text-[10px] tracking-[0.4em] block mb-10">03 / SECURITY</span>
+                    <h3 class="text-xl font-bold mb-6" data-i18n="srv-3-title">Logística Especializada</h3>
+                    <p class="text-gray-500 font-light text-sm leading-relaxed mb-8" data-i18n="srv-3-desc">Despliegue logístico avanzado con monitoreo GPS en tiempo real para eventos empresariales y flujos VIP en la ciudad.</p>
+                    <ul class="text-[9px] space-y-3 tracking-widest uppercase opacity-40">
+                        <li>• Encriptación de datos</li>
+                        <li>• Soporte de campo 24/7</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- NUMERALES DE CONFIANZA METRÓPOLI -->
+    <section class="section-p bg-black">
+        <div class="container mx-auto px-12">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 md:gap-20">
+                <div class="text-center lg:text-left">
+                    <p class="text-4xl md:text-5xl font-bold text-gold luxury-font mb-2">100%</p>
+                    <p class="text-[9px] tracking-[0.3em] uppercase text-gray-500" data-i18n="stat-1">Discreción Médica/NDA</p>
+                </div>
+                <div class="text-center lg:text-left">
+                    <p class="text-4xl md:text-5xl font-bold text-gold luxury-font mb-2">24/7</p>
+                    <p class="text-[9px] tracking-[0.3em] uppercase text-gray-500" data-i18n="stat-2">Despacho Inmediato</p>
+                </div>
+                <div class="text-center lg:text-left">
+                    <p class="text-4xl md:text-5xl font-bold text-gold luxury-font mb-2">+15</p>
+                    <p class="text-[9px] tracking-[0.3em] uppercase text-gray-500" data-i18n="stat-3">Activos de Alta Gama</p>
+                </div>
+                <div class="text-center lg:text-left">
+                    <p class="text-4xl md:text-5xl font-bold text-gold luxury-font mb-2">Elite</p>
+                    <p class="text-[9px] tracking-[0.3em] uppercase text-gray-500" data-i18n="stat-4">Estándar Global</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION IMPERIAL PARA CIERRE DE COMPRA -->
+    <section class="section-p bg-white text-black text-center relative overflow-hidden">
+        <div class="container mx-auto px-6 relative z-10">
+            <h2 class="text-5xl md:text-7xl font-black luxury-font mb-8 reveal" data-i18n="cta-title">Asegure su <br>Próximo Destino</h2>
+            <p class="text-gray-500 text-base md:text-lg max-w-2xl mx-auto mb-16 tracking-wide font-light" data-i18n="cta-desc">
+                Unidades limitadas y alta demanda de reserva ejecutiva corporativa. Solicite acceso de conserjería directo a través de nuestra oficina privada por WhatsApp.
+            </p>
+            <div class="flex flex-col items-center gap-8">
+                <a href="https://wa.me/573184499437" target="_blank" class="bg-black text-white px-12 py-6 text-xs tracking-[0.5em] uppercase hover:bg-gold hover:text-black transition-all duration-700 font-medium">
+                    <i class="fa-brands fa-whatsapp mr-2 text-base"></i> <span data-i18n="cta-btn">Contactar Conserje VIP</span>
+                </a>
+                <div class="text-[9px] tracking-[0.4em] text-gray-400 font-light">
+                    OFICINA DE DESPACHO • MEDELLÍN, COLOMBIA
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-16 bg-black border-t border-white/5">
+        <div class="container mx-auto px-12 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="luxury-font text-xl text-gold">JOEX AGENCIA DIGITAL</div>
+            <div class="flex gap-8 text-[9px] tracking-widest text-gray-500 uppercase">
+                <a href="#" class="hover:text-gold transition">Instagram</a>
+                <a href="#" class="hover:text-gold transition">LinkedIn</a>
+            </div>
+            <p class="text-[8px] text-gray-700 tracking-[0.3em] uppercase">JOEX International © 2026 • Digital Engineering & Luxury Mobility</p>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVIDAD Y LOCALIZACIÓN (DICCIONARIO EN JS PARA EL CAMBIO DE IDIOMA SECO) -->
     <script>
-        // --- ENGINE DE PARTÍCULAS ---
-        const canvas = document.getElementById('particles-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
-                this.opacity = Math.random() * 0.5 + 0.2;
+        // Diccionario de Traducciones (Módulo de Internacionalización Limpio)
+        const translations = {
+            es: {
+                "loader-auth": "Experiencia de Conserjería Exclusiva",
+                "nav-fleet": "Flota", "nav-about": "La Firma", "nav-services": "Servicios", "nav-cta": "Reservar Ahora",
+                "hero-sub": "EXPERIENCIA DE CONDUCCIÓN SUPREMA • MEDELLÍN",
+                "hero-main": "DOMINIO & <br> <span class='text-gold'>SOBERANÍA EN RUTA</span>",
+                "hero-para": "Curamos la flota de superdeportivos y SUVs ejecutivas más imponente del país. Diseñado exclusivamente para quienes no admiten compromisos en rendimiento, estatus y privacidad.",
+                "hero-btn-primary": "Ver Portafolio de Lujo", "hero-btn-secondary": "Contacto VIP",
+                "portfolio-sub": "Curaduría Exclusiva", "portfolio-title-1": "Nuestra Flota", "portfolio-title-2": "De Élite",
+                "filter-all": "Todos", "filter-sport": "Deportivos",
+                "car-1-desc": "Blindaje premium, confort absoluto en terrenos desafiantes.",
+                "car-2-desc": "Ingeniería pura y deportividad atemporal para la ciudad.",
+                "car-3-desc": "Agilidad urbana, rendimiento deportivo y sofisticación eficiente.",
+                "car-rent-label": "Tarifa Corporativa", "car-btn": "Alquilar",
+                "about-title": "El Ecosistema <br><span class='text-gold'>De Alto Rendimiento</span>",
+                "about-para-1": "En JOEX, fusionamos la ingeniería de software interactiva de vanguardia con la curaduría logística más exclusiva en renta de vehículos. Entendemos que el traslado de ejecutivos de élite y creadores exige la misma precisión informática que una infraestructura digital de nivel bancario.",
+                "about-para-2": "Operamos bajo estrictos acuerdos de confidencialidad (NDA), sirviendo como el puente de prestigio que conecta marcas globales, tecnología inmersiva y movilidad premium.",
+                "about-v1-title": "CONSERJERÍA 24/7", "about-v1-desc": "Atención y despacho inmediato de vehículos sin fricciones burocráticas.",
+                "about-v2-title": "ESTÉTICA INMERSIVA", "about-v2-desc": "Diseños digitales y experiencias de conducción configuradas al detalle absoluto.",
+                "services-title": "Arquitectura de <span class='text-gold'>Servicios</span>", "services-sub": "Ingeniería aplicativa y movilidad corporativa",
+                "srv-1-title": "Alquiler Corporativo Premium", "srv-1-desc": "Flota premium disponible para CEOs, inversionistas internacionales y productoras de contenido con máxima privacidad.",
+                "srv-2-title": "Experiencias Inmersivas", "srv-2-desc": "Desarrollo de landing pages de alta gama y arquitecturas interactivas que transforman la navegación en deseo de compra.",
+                "srv-3-title": "Logística Especializada", "srv-3-desc": "Despliegue logístico avanzado con monitoreo GPS en tiempo real para eventos empresariales y flujos VIP en la ciudad.",
+                "stat-1": "Discreción Médica/NDA", "stat-2": "Despacho Inmediato", "stat-3": "Activos de Alta Gama", "stat-4": "Estándar Global",
+                "cta-title": "Asegure su <br>Próximo Destino", "cta-desc": "Unidades limitadas y alta demanda de reserva ejecutiva corporativa. Solicite acceso de conserjería directo a través de nuestra oficina privada por WhatsApp.",
+                "cta-btn": "Contactar Conserje VIP"
+            },
+            en: {
+                "loader-auth": "Exclusive Concierge Experience",
+                "nav-fleet": "Fleet", "nav-about": "The Firm", "nav-services": "Services", "nav-cta": "Book Now",
+                "hero-sub": "SUPREME DRIVING EXPERIENCE • MEDELLÍN",
+                "hero-main": "DOMINANCE & <br> <span class='text-gold'>ROAD SOVEREIGNTY</span>",
+                "hero-para": "We curate the most imposing fleet of supercars and executive SUVs in the country. Designed exclusively for those who demand nothing less than absolute performance, status, and privacy.",
+                "hero-btn-primary": "View Luxury Portfolio", "hero-btn-secondary": "VIP Contact",
+                "portfolio-sub": "Exclusive Curation", "portfolio-title-1": "Our Elite", "portfolio-title-2": "Fleet",
+                "filter-all": "All", "filter-sport": "Sports",
+                "car-1-desc": "Premium armor, absolute comfort in challenging terrains.",
+                "car-2-desc": "Pure engineering and timeless sports performance for the city.",
+                "car-3-desc": "Urban agility, sporty performance, and efficient sophistication.",
+                "car-rent-label": "Corporate Rate", "car-btn": "Rent",
+                "about-title": "The High-Performance <br><span class='text-gold'>Ecosystem</span>",
+                "about-para-1": "At JOEX, we blend cutting-edge interactive software engineering with the most exclusive logistics curation in vehicle rentals. We understand that moving elite executives and creators demands the same computing precision as a banking-grade digital infrastructure.",
+                "about-para-2": "We operate under strict non-disclosure agreements (NDA), serving as the premium bridge connecting global brands, immersive technology, and high-end mobility.",
+                "about-v1-title": "24/7 CONCIERGE", "about-v1-desc": "Immediate vehicle dispatch and attention with zero bureaucratic friction.",
+                "about-v2-title": "IMMERSIVE AESTHETICS", "about-v2-desc": "Digital designs and driving experiences configured down to absolute detail.",
+                "services-title": "Service <span class='text-gold'>Architecture</span>", "services-sub": "Application engineering & corporate mobility",
+                "srv-1-title": "Premium Corporate Rental", "srv-1-desc": "Premium fleet available for CEOs, international investors, and content productions with maximum privacy.",
+                "srv-2-title": "Immersive Experiences", "srv-2-desc": "Development of high-end landing pages and interactive architectures that transform browsing into desire.",
+                "srv-3-title": "Specialized Logistics", "srv-3-desc": "Advanced tactical deployment with real-time GPS tracking for corporate events and VIP flows.",
+                "stat-1": "Strict Discretion/NDA", "stat-2": "Immediate Dispatch", "stat-3": "High-End Assets", "stat-4": "Global Standard",
+                "cta-title": "Secure Your <br>Next Destination", "cta-desc": "Limited availability and high demand for executive corporate booking. Request direct concierge access through our WhatsApp channel.",
+                "cta-btn": "Contact VIP Concierge"
             }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0;
-                if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                if (this.y < 0) this.y = canvas.height;
-            }
-            draw() {
-                ctx.fillStyle = `rgba(197, 160, 89, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+        };
 
-        function initParticles() {
-            particles = [];
-            for (let i = 0; i < 100; i++) particles.push(new Particle());
-        }
+        let currentLang = 'es';
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-            requestAnimationFrame(animate);
-        }
-
-        window.addEventListener('resize', resize);
-        resize();
-        initParticles();
-        animate();
-
-        // --- GSAP & APP LOGIC ---
-        window.addEventListener('load', () => {
-            gsap.registerPlugin(ScrollTrigger);
-            const tl = gsap.timeline();
-            const audio = document.getElementById('bg-audio');
-            const audioBtn = document.getElementById('audio-btn');
-            const musicStatus = document.getElementById('music-status');
-
-            tl.to(".word-bienvenido", { opacity: 1, y: 0, duration: 1 })
-              .to(".word-joex", { opacity: 1, y: 0, duration: 1.2 }, "-=0.6")
-              .to("#loader-portal", { y: "-100%", duration: 1.2, ease: "expo.inOut", delay: 0.8 })
-              .to("#app-canvas", { opacity: 1, duration: 0.5 }, "-=0.2")
-              .to("#main-title", { opacity: 1, y: -20, duration: 1.2 }, "-=0.1")
-              .to("#wa-anchor", { opacity: 1, duration: 0.8 }, "-=0.5")
-              .to("#audio-btn", { opacity: 1, duration: 0.8 }, "-=0.8");
-
-            // MUSIC
-            document.body.addEventListener('click', () => {
-                if (audio.paused && !audioBtn.classList.contains('muted')) {
-                    audio.play();
-                    audio.volume = 0.4;
-                    musicStatus.innerText = "AUDIO: ON";
+        function switchLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.innerHTML = translations[lang][key];
                 }
-            }, { once: true });
+            });
 
-            audioBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (audio.paused) {
-                    audio.play();
-                    musicStatus.innerText = "AUDIO: ON";
-                    audioBtn.classList.remove('muted');
+            // Actualizar estilo visual de los selectores activos
+            if(lang === 'es') {
+                document.getElementById('btn-es').className = "text-gold font-bold transition";
+                document.getElementById('btn-en').className = "text-gray-500 hover:text-white transition";
+            } else {
+                document.getElementById('btn-en').className = "text-gold font-bold transition";
+                document.getElementById('btn-es').className = "text-gray-500 hover:text-white transition";
+            }
+        }
+
+        function toggleMobileLang() {
+            switchLang(currentLang === 'es' ? 'en' : 'es');
+        }
+
+        // Sistema de Filtrado de Portafolio con Animación Suave
+        function filterFleet(category) {
+            const cards = document.querySelectorAll('#fleet-grid .fleet-card');
+            
+            // Actualizar estados de botones de filtro
+            const buttons = ['all', 'suv', 'sport'];
+            buttons.forEach(b => {
+                const btn = document.getElementById(`filter-${b}`);
+                if(b === category) {
+                    btn.className = "border border-gold bg-gold text-black px-6 py-3 transition duration-500 rounded-none";
                 } else {
-                    audio.pause();
-                    musicStatus.innerText = "AUDIO: OFF";
-                    audioBtn.classList.add('muted');
+                    btn.className = "border border-white/10 hover:border-gold px-6 py-3 transition duration-500 rounded-none";
                 }
             });
 
-            gsap.utils.toArray(".project-row").forEach(row => {
-                gsap.from(row, {
-                    scrollTrigger: { trigger: row, start: "top 85%" },
-                    opacity: 0, y: 50, duration: 1.2
+            // Animar el cambio de rejilla con GSAP para un efecto ultra fluido
+            gsap.to(cards, {
+                opacity: 0,
+                scale: 0.9,
+                duration: 0.3,
+                onComplete: () => {
+                    cards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                    gsap.to(cards, {
+                        opacity: 1,
+                        scale: 1,
+                        duration: 0.6,
+                        ease: "power3.out",
+                        stagger: 0.05
+                    });
+                }
+            });
+        }
+
+        // --- GESTOR DE CARGA CINEMÁTICO ---
+        window.addEventListener('load', () => {
+            let progress = 0;
+            const bar = document.getElementById('load-bar');
+            const timer = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 100) progress = 100;
+                bar.style.width = progress + '%';
+                
+                if (progress === 100) {
+                    clearInterval(timer);
+                    gsap.to('#loader', { opacity: 0, duration: 1.5, ease: "power4.inOut", onComplete: () => {
+                        document.getElementById('loader').style.display = 'none';
+                        startAnimations();
+                    }});
+                }
+            }, 80);
+        });
+
+        // --- MOTOR CURSOR ELITE INTERACTIVO ---
+        const cur = document.getElementById('cursor');
+        const fol = document.getElementById('cursor-follower');
+        document.addEventListener('mousemove', (e) => {
+            gsap.to(cur, { x: e.clientX, y: e.clientY, duration: 0.05 });
+            gsap.to(fol, { x: e.clientX - 20, y: e.clientY - 20, duration: 0.3, ease: "power2.out" });
+        });
+
+        // Agrandar cursor al pasar por encima de elementos interactivos (Efecto Atractor)
+        document.querySelectorAll('a, button, .fleet-card').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                gsap.to(fol, { scale: 1.5, borderColor: '#f9f295', background: 'rgba(197,160,89,0.05)', duration: 0.3 });
+            });
+            el.addEventListener('mouseleave', () => {
+                gsap.to(fol, { scale: 1, borderColor: '#c5a059', background: 'transparent', duration: 0.3 });
+            });
+        });
+
+        // --- MOTOR DE FONDO: CONSTELACIONES TRIDIMENSIONALES (Three.js) ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 2000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 3000;
+        const starPos = new Float32Array(starCount * 3);
+        for(let i=0; i<starCount*3; i++) { starPos[i] = (Math.random() - 0.5) * 2500; }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({ color: 0xc5a059, size: 0.7, transparent: true, opacity: 0.25 });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
+        camera.position.z = 900;
+
+        function animateStars() {
+            requestAnimationFrame(animateStars);
+            stars.rotation.y += 0.0002;
+            stars.rotation.x += 0.0001;
+            renderer.render(scene, camera);
+        }
+        animateStars();
+
+        // Ventana adaptativa para Three.js
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // --- ANIMACIONES INTEGRALES (GSAP & SCROLLTRIGGER) ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        function startAnimations() {
+            const tl = gsap.timeline();
+            tl.to("#hero-tag", { opacity: 1, y: 0, duration: 1.2, ease: "power4.out" })
+              .to("#hero-main", { opacity: 1, duration: 1.5, ease: "power4.out" }, "-=0.8")
+              .to("#hero-desc", { opacity: 1, duration: 1.2, ease: "power4.out" }, "-=0.8")
+              .to("#hero-btns", { opacity: 1, duration: 1, ease: "power4.out" }, "-=0.8");
+
+            // Efecto de revelación cinemática al hacer scroll en títulos
+            document.querySelectorAll('.reveal').forEach(el => {
+                ScrollTrigger.create({
+                    trigger: el,
+                    start: "top 85%",
+                    onEnter: () => el.classList.add('active')
                 });
             });
+
+            // Animación por bloques en cascada (Stagger) para las tarjetas de la flota
+            gsap.from(".fleet-card", {
+                scrollTrigger: {
+                    trigger: "#portfolio",
+                    start: "top 70%",
+                },
+                y: 60,
+                opacity: 0,
+                duration: 1.2,
+                stagger: 0.15,
+                ease: "power4.out"
+            });
+        }
+
+        // CONTROL DINÁMICO DE COMPACTACIÓN DE NAVBAR
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 80) {
+                nav.classList.add('glass-nav', 'py-4');
+                nav.classList.remove('py-8');
+            } else {
+                nav.classList.remove('glass-nav', 'py-4');
+                nav.classList.add('py-8');
+            }
         });
     </script>
 </body>
